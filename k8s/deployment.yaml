@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: college-admission-deployment
+  labels:
+    app: college-admission
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: college-admission
+  template:
+    metadata:
+      labels:
+        app: college-admission
+    spec:
+      containers:
+      - name: college-admission
+        image: guruprasadkm2000/college-admission:latest
+        ports:
+        - containerPort: 3007
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongodb:27017/studentDB"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: college-admission-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: college-admission
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3007
