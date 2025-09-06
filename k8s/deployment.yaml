@@ -18,7 +18,7 @@ spec:
       - name: college-admission
         image: guruprasadkm2000/college-admission:latest
         ports:
-        - containerPort: 3007
+        - containerPort: 3028
         env:
         - name: MONGO_URI
           value: "mongodb://mongodb:27017/studentDB"
@@ -34,4 +34,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3007
+      targetPort: 3028
