@@ -11,7 +11,6 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = 'guruprasadkm2000'
-        DOCKERHUB_PASS = credentials('dockerhub-creds')
         AWS_REGION = 'us-east-1'
         CLUSTER_NAME = 'CAF-Cluster'
     }
@@ -34,8 +33,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
-                    sh "docker push $DOCKERHUB_USER/college-admission:${params.IMAGE_TAG}"
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
+                                                      usernameVariable: 'DOCKERHUB_USER',
+                                                      passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh '''
+                          echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+                          docker push $DOCKERHUB_USER/college-admission:${IMAGE_TAG}
+                        '''
+                    }
                 }
             }
         }
@@ -61,4 +66,3 @@ pipeline {
         }
     }
 }
-
